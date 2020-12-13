@@ -9,7 +9,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: (root, args, context) => {
-      return "Hello Jag! Welcome to stocks/v1/graphql api";
+      return "Hello! Welcome to Jag Stocks API";
     },
   },
 };
