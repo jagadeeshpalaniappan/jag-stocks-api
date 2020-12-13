@@ -1,0 +1,10 @@
+{
+  "name": "jag-stocks-api",
+  "version": "1.0.0",
+  "description": "jag-stocks-api",
+  "scripts": {},
+  "dependencies": {
+    "apollo-server-micro": "^2.15.0",
+    "graphql": "^15.1.0"
+  }
+}
