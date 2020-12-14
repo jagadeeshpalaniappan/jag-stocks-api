@@ -1,15 +1,22 @@
 {
   "version": 2,
-  "alias": "jag-stocks-api.now.sh",
+  "name": "jag-rest-api",
+  "alias": "jag-rest-api.now.sh",
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@now/node"
+    }
+  ],
   "routes": [
     {
       "headers": {
-        "Access-Control-Allow-Origin": "*.jagadeeshpalaniappan.com",
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
       },
-      "src": "/stocks/v1/graphql",
-      "dest": "api/stocks/v1/index.js"
+      "src": "/.*",
+      "dest": "/index.js"
     }
   ],
   "env": {}
