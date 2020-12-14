@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "name": "jag-rest-api",
-  "alias": "jag-rest-api.now.sh",
+  "alias": "jag-stocks-api.now.sh",
   "builds": [
     {
       "src": "index.js",

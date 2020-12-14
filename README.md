@@ -1,4 +1,4 @@
-# jag-api
+# jag-stocks-api
 
 REST & GraphQL
 

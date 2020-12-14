@@ -4,7 +4,9 @@
   "description": "Jag Stocks API",
   "author": "Jagadeesh Palaniappan",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "vercel dev"
+  },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "apollo-server-express": "^2.15.0",
