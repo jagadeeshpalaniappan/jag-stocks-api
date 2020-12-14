@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-const DB_URL = process.env.DB_URL;
+const DB_URL = process.env.MONGODB_URI;
 console.log({ DB_URL });
 
 mongoose.Promise = global.Promise;
