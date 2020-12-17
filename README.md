@@ -1,6 +1,6 @@
 # jag-stocks-api
 
-REST & GraphQL
+REST & GraphQL (TODO)
 
 ```
 npm start
