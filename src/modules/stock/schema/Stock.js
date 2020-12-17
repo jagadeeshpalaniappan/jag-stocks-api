@@ -1,13 +1,17 @@
-var mongoose = require("mongoose");
+const { model, Schema } = require("mongoose");
 
-var stockSchema = new mongoose.Schema({
+var StockSchema = new Schema({
   stockId: String,
   name: String,
+  yf: Object,
+  rh: Object,
+  rhg: Object,
+  updatedAt: { type: Date, default: Date.now },
 });
 
-stockSchema.method("toJSON", function () {
+StockSchema.method("toJSON", function () {
   var { _id, ...rest } = this.toObject();
   return { id: _id, ...rest };
 });
 
-module.exports = mongoose.model("Stock", stockSchema, "Stocks");
+module.exports = model("Stock", StockSchema, "Stocks");
