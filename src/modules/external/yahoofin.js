@@ -47,7 +47,7 @@ async function parsePage({ stockId, page }) {
       };
     }
     // rep:
-    console.log("yf.parsePage:end", res);
+    console.log("yf.parsePage:end");
     return res;
   } catch (error) {
     console.log("yf.parsePage:err");

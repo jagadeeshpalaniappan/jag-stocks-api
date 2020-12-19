@@ -30,7 +30,7 @@ function _getAnalystRating({ document }) {
       createdAt: Date.now(),
     };
 
-    console.log("rh.parsePage:end", res);
+    console.log("rh.parsePage:end");
     return res;
   } catch (error) {
     console.log("rh.parsePage:err");
