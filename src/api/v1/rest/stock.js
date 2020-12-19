@@ -48,7 +48,8 @@ async function getStockAnalysis(req, res) {
     // VALIDATE:
     // POPULATE:
     const token = req.headers["rhtoken"];
-    const { stockIds, forceUpdate } = req.body;
+    const { stockIds: stockIdDups, forceUpdate } = req.body;
+    const stockIds = [...new Set(stockIdDups)];
     console.log("getStockAnalysis:start", { stockIds, forceUpdate });
 
     // TX:
