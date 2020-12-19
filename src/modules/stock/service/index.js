@@ -120,7 +120,92 @@ async function refreshStocks({ stockIds, token, forceUpdate }) {
   return stockMap;
 }
 
+function getFetchExtDocs({ stockIds, existingStockDocs, forceUpdate, hisKey }) {
+  // forceUpdate: true (fetchAllRecs)
+  let fetchedStockMap = {};
+  let updateStockMap = {};
+
+  // forceUpdate: false (fetchOnlyNewRecs)
+  for (const stockDoc of existingStockDocs) {
+    const yf = _get(stockDoc, ["yf", hisKey]);
+    const rh = _get(stockDoc, ["rh", hisKey]);
+    const rhg = _get(stockDoc, ["rhg", hisKey]);
+    const hasCurrMonHistory = yf && rh && rhg;
+    if (hasCurrMonHistory && !forceUpdate) {
+      fetchedStockMap[stockDoc.stockId] = stockDoc;
+    } else {
+      updateStockMap[stockDoc.stockId] = stockDoc;
+    }
+  }
+
+  const newStockIds = [];
+
+  for (const stockId of stockIds) {
+    if (!updateStockMap[stockId] && !fetchedStockMap[stockId]) {
+      newStockIds.push(stockId);
+    }
+  }
+
+  return { fetchedStockMap, updateStockMap, newStockIds };
+}
+
+async function getStockAnalysis({ stockIds, token, forceUpdate }) {
+  console.log("stockSvc.getExtStocks:start");
+  const existingStockDocs = await stockDao.getStocksByStockIds({ stockIds });
+
+  const hisKey = _getHistoryKey();
+  const { fetchedStockMap, updateStockMap, newStockIds } = getFetchExtDocs({
+    stockIds,
+    existingStockDocs,
+    forceUpdate,
+    hisKey,
+  });
+
+  const updateStockIds = Object.keys(updateStockMap);
+  const fetchStockIds = [...updateStockIds, ...newStockIds];
+
+  for (let i = 0; i < fetchStockIds.length; i++) {
+    const stockId = fetchStockIds[i];
+    const { yf, rh, rhg } = await fetchStocksExt({ stockId, token });
+
+    const newStock = {
+      stockId,
+      name: _get(yf, "name"),
+      yf: {},
+      rh: {},
+      rhg: {},
+    };
+
+    const isUpdateDoc = !!updateStockMap[stockId];
+    const stockDoc = isUpdateDoc ? updateStockMap[stockId] : newStock;
+    if (yf) {
+      stockDoc.yf = { ...stockDoc.yf, [hisKey]: yf };
+    }
+    if (rh) {
+      stockDoc.rh = { ...stockDoc.rh, [hisKey]: rh };
+    }
+    if (rhg) {
+      stockDoc.rhg = { ...stockDoc.rhg, [hisKey]: rhg };
+    }
+
+    fetchedStockMap[stockId] = stockDoc;
+  }
+
+  if (fetchStockIds && fetchStockIds.length > 0) {
+    // createOrUpdateStocks in DB
+    await stockDao.createOrUpdateStocks({
+      newStockIds,
+      updateStockIds,
+      fetchedStockMap,
+    });
+  }
+
+  console.log("stockSvc.refreshStocks:end");
+  return fetchedStockMap;
+}
+
 module.exports = {
   getStocks,
   refreshStocks,
+  getStockAnalysis,
 };

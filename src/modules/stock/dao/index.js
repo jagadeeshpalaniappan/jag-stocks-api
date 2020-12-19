@@ -15,64 +15,42 @@ async function getStocksByStockIds({ stockIds }) {
   return stockDocs;
 }
 
-async function createStocks({ newStockIds, stockMap, hisKey }) {
+async function createStocks({ newStockIds, fetchedStockMap }) {
   console.log("stockDao.createStocks:start");
-  const stocksSchema = newStockIds.map((stockId) => {
-    const { yf, rh, rhg } = stockMap[stockId];
-    const newStock = {
-      stockId,
-      name: _get(yf, "name"),
-      yf: {},
-      rh: {},
-      rhg: {},
-    };
-    if (yf) newStock.yf[hisKey] = yf;
-    if (rh) newStock.rh[hisKey] = rh;
-    if (rhg) newStock.rhg[hisKey] = rhg;
-    return new Stock(newStock);
-  });
+  const stocksSchema = newStockIds.map(
+    (stockId) => new Stock(fetchedStockMap[stockId])
+  );
   const resp = await Stock.create(stocksSchema);
   console.log("stockDao.createStocks:end");
   return resp;
 }
 
-async function updateStocks({ updateStockDocs, stockMap, hisKey }) {
+async function updateStocks({ updateStockIds, fetchedStockMap }) {
   console.log("stockDao.updateStocks:start");
-  const allPromises = updateStockDocs.map((stockDoc) => {
-    const { yf, rh, rhg } = stockMap[stockDoc.stockId];
-    if (yf) {
-      stockDoc.yf[hisKey] = yf;
-      stockDoc.markModified("yf");
-    }
-    if (rh) {
-      stockDoc.rh[hisKey] = rh;
-      stockDoc.markModified("rh");
-    }
-    if (rhg) {
-      stockDoc.rhg[hisKey] = rhg;
-      stockDoc.markModified("rhg");
-    }
+
+  const allPromises = updateStockIds.map((stockId) => {
+    const stockDoc = fetchedStockMap[stockId];
     return stockDoc.save();
   });
   const resp = await Promise.all(allPromises);
+
   console.log("stockDao.updateStocks:end");
   return resp;
 }
 
 async function createOrUpdateStocks({
   newStockIds,
-  updateStockDocs,
-  stockMap,
-  hisKey,
+  updateStockIds,
+  fetchedStockMap,
 }) {
   console.log("stockDao.createOrUpdateStocks:start");
 
   if (newStockIds.length > 0) {
-    await createStocks({ newStockIds, stockMap, hisKey });
+    await createStocks({ newStockIds, fetchedStockMap });
   }
 
-  if (updateStockDocs.length > 0) {
-    await updateStocks({ updateStockDocs, stockMap, hisKey });
+  if (updateStockIds.length > 0) {
+    await updateStocks({ updateStockIds, fetchedStockMap });
   }
 
   console.log("stockDao.createOrUpdateStocks:end");

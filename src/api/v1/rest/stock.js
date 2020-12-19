@@ -1,6 +1,4 @@
 // API: REST-API
-
-var router = require("express").Router();
 const { check, validationResult } = require("express-validator");
 
 const stockSvc = require("../../../modules/stock/service");
@@ -43,7 +41,33 @@ async function refreshStocks(req, res) {
   }
 }
 
+// GET: StockAnalysis from DB Cache (if possible)
+// GET: StockAnalysis from EXT
+async function getStockAnalysis(req, res) {
+  try {
+    // VALIDATE:
+    // POPULATE:
+    const token = req.headers["rhtoken"];
+    const { stockIds, forceUpdate } = req.body;
+    console.log("getStockAnalysis:start", { stockIds, forceUpdate });
+
+    // TX:
+    const stocksResp = await stockSvc.getStockAnalysis({
+      stockIds,
+      token,
+      forceUpdate,
+    });
+
+    // RESP:
+    res.json(stocksResp);
+  } catch (error) {
+    console.log("getStockAnalysis:err", error);
+    res.status(500).json({ error });
+  }
+}
+
 module.exports = {
   getStocks,
   refreshStocks,
+  getStockAnalysis,
 };
