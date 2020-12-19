@@ -8,7 +8,7 @@ const URL = "https://finance.yahoo.com/quote";
 
 async function parsePage({ stockId, page }) {
   try {
-    console.log("yf.parsePage:start");
+    console.log("yf.parsePage:start", { stockId });
     let res = {};
     const virtualConsole = new jsdom.VirtualConsole();
     const dom = new JSDOM(page, {
@@ -48,23 +48,24 @@ async function parsePage({ stockId, page }) {
       };
     }
     // rep:
-    console.log("yf.parsePage:end");
+    console.log("yf.parsePage:end", { stockId });
     return res;
-  } catch (error) {
-    console.log("yf.parsePage:err");
-    console.error(error);
+  } catch (err) {
+    console.log("yf.parsePage:err", { stockId });
+    console.error(err);
   }
 }
 
 async function get({ stockId }) {
   try {
-    console.log("yf.get:start");
-    const page = await getPage({ url: `${URL}/${stockId}` });
+    console.log("yf.get:start", { stockId });
+    const page = await getPage({ url: `${URL}/${stockId}`, stockId });
     const json = await parsePage({ stockId, page });
-    console.log("yf.get:end");
+    console.log("yf.get:end", { stockId });
     return json;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.log("yf.get:err", { stockId });
+    console.error(err);
   }
 }
 

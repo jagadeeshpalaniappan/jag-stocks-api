@@ -4,14 +4,14 @@ const { fetchStatus } = require("../common/constants");
 
 async function _getRhInfo({ stockId }) {
   try {
-    console.log("rhg._getRhInfo:start");
+    console.log("rhg._getRhInfo:start", { stockId });
     const url = `https://api.robinhood.com/instruments/?active_instruments_only=false&symbol=${stockId}`;
     const response = await axios.get(url);
-    console.log("rhg._getRhInfo:end");
+    console.log("rhg._getRhInfo:end", { stockId });
     return response.data;
-  } catch (error) {
-    console.log("rhg._getRhInfo:err");
-    console.error(error);
+  } catch (err) {
+    console.log("rhg._getRhInfo:err", { stockId });
+    console.error(err);
   }
 }
 
@@ -32,12 +32,16 @@ async function _getRhGoldRating({ stockId, token }) {
       method: "GET",
     };
 
-    console.log("rhg._getRhGoldRating:start", options);
+    console.log("rhg._getRhGoldRating:start", { stockId });
     const response = await axios(options);
-    console.log("rhg._getRhGoldRating:end");
+    console.log("rhg._getRhGoldRating:end", { stockId });
     return { ...response.data, fetchStatus: fetchStatus.COMPLETED };
   } catch (err) {
-    console.log("rhg._getRhGoldRating:err", err);
+    console.log("rhg._getRhGoldRating:err", {
+      stockId,
+      status: _get(err, "response.status"),
+    });
+    // console.error(err); // DO-NOT-PRINT
     return _get(err, "response.status") === 404
       ? { fetchStatus: fetchStatus.NA }
       : null;
@@ -46,12 +50,13 @@ async function _getRhGoldRating({ stockId, token }) {
 
 async function get({ stockId, token }) {
   try {
-    console.log("rh.get:start");
+    console.log("rhg.get:start", { stockId });
     const json = await _getRhGoldRating({ stockId, token });
-    console.log("rh.get:end");
+    console.log("rhg.get:end", { stockId });
     return json;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.log("rhg.get:err", { stockId });
+    console.error(err);
   }
 }
 

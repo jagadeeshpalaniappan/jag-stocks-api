@@ -6,8 +6,8 @@ const { fetchStatus } = require("../common/constants");
 
 const URL = "https://robinhood.com/stocks";
 
-function _getAnalystRating({ document }) {
-  console.log("rh._getAnalystRating:start");
+function _getAnalystRating({ document, stockId }) {
+  console.log("rh._getAnalystRating:start", { stockId });
   try {
     // get: rating
     const arContainer = document.querySelector("#analyst-ratings");
@@ -33,40 +33,41 @@ function _getAnalystRating({ document }) {
       };
     }
 
-    console.log("rh._getAnalystRating:end");
+    console.log("rh._getAnalystRating:end", { stockId });
     return res;
-  } catch (error) {
-    console.log("rh._getAnalystRating:err");
-    console.error(error);
+  } catch (err) {
+    console.log("rh._getAnalystRating:err", { stockId });
+    console.error(err);
   }
 }
 
-async function parsePage({ page }) {
+async function parsePage({ stockId, page }) {
   try {
-    console.log("rh.parsePage:start");
+    console.log("rh.parsePage:start", { stockId });
     const dom = new JSDOM(page);
     const document = dom.window.document;
 
     // get: 'free' rating
-    const res = _getAnalystRating({ document });
+    const res = _getAnalystRating({ document, stockId });
 
-    console.log("rh.parsePage:end", res);
+    console.log("rh.parsePage:end", { stockId });
     return res;
-  } catch (error) {
-    console.log("rh.parsePage:err");
-    console.error(error);
+  } catch (err) {
+    console.log("rh.parsePage:err", { stockId });
+    console.error(err);
   }
 }
 
 async function get({ stockId }) {
   try {
-    console.log("rh.get:start");
-    const page = await getPage({ url: `${URL}/${stockId}` });
-    const json = await parsePage({ page });
-    console.log("rh.get:end");
+    console.log("rh.get:start", { stockId });
+    const page = await getPage({ url: `${URL}/${stockId}`, stockId });
+    const json = await parsePage({ stockId, page });
+    console.log("rh.get:end", { stockId });
     return json;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.log("rh.get:err", { stockId });
+    console.error(err);
   }
 }
 
