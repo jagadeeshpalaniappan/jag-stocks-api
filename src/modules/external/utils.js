@@ -1,13 +1,13 @@
 const axios = require("axios");
-async function getPage({ url, stockId }) {
+async function getPage({ url }) {
   try {
-    console.log("yf.getPage:start");
+    console.log("getPage:start");
     const response = await axios.get(url);
-    console.log("yf.getPage:end");
+    console.log("getPage:end");
     return response.data;
-  } catch (error) {
-    console.log("yf.getPage:err");
-    console.error(error);
+  } catch (err) {
+    console.log("getPage:err");
+    console.error(err);
   }
 }
 

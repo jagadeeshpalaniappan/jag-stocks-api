@@ -5,6 +5,7 @@ const yfSvc = require("../../external/yahoofin");
 const rhSvc = require("../../external/robinhood");
 const rhgSvc = require("../../external/rhg");
 const { _getHistoryKey } = require("../../common/utils");
+const { fetchStatus } = require("../../common/constants");
 
 async function getStocks(options) {
   console.log("stockSvc.getStocks:start");
@@ -127,10 +128,13 @@ function getFetchExtDocs({ stockIds, existingStockDocs, forceUpdate, hisKey }) {
 
   // forceUpdate: false (fetchOnlyNewRecs)
   for (const stockDoc of existingStockDocs) {
-    const yf = _get(stockDoc, ["yf", hisKey]);
-    const rh = _get(stockDoc, ["rh", hisKey]);
-    const rhg = _get(stockDoc, ["rhg", hisKey]);
-    const hasCurrMonHistory = yf && rh && rhg;
+    const yf = _get(stockDoc, ["yf", hisKey, "fetchStatus"]);
+    const rh = _get(stockDoc, ["rh", hisKey, "fetchStatus"]);
+    const rhg = _get(stockDoc, ["rhg", hisKey, "fetchStatus"]);
+    const hasYf = yf === fetchStatus.COMPLETED || yf === fetchStatus.NA;
+    const hasRh = rh === fetchStatus.COMPLETED || rh === fetchStatus.NA;
+    const hasRhg = rhg === fetchStatus.COMPLETED || rhg === fetchStatus.NA;
+    const hasCurrMonHistory = hasYf && hasRh && hasRhg;
     if (hasCurrMonHistory && !forceUpdate) {
       fetchedStockMap[stockDoc.stockId] = stockDoc;
     } else {

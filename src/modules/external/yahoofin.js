@@ -2,8 +2,8 @@ const _get = require("lodash.get");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const { getPage } = require("./utils");
+const { fetchStatus } = require("../common/constants");
 
-const { RH_HTML } = require("./utils");
 const URL = "https://finance.yahoo.com/quote";
 
 async function parsePage({ stockId, page }) {
@@ -44,6 +44,7 @@ async function parsePage({ stockId, page }) {
         targetHighPrice: _get(financialData, "targetHighPrice.raw"),
         trend: _get(recommendationTrend, "trend"),
         createdAt: Date.now(),
+        fetchStatus: fetchStatus.COMPLETED,
       };
     }
     // rep:
@@ -58,10 +59,9 @@ async function parsePage({ stockId, page }) {
 async function get({ stockId }) {
   try {
     console.log("yf.get:start");
-    const page = await getPage({ url: `${URL}/${stockId}`, stockId });
+    const page = await getPage({ url: `${URL}/${stockId}` });
     const json = await parsePage({ stockId, page });
     console.log("yf.get:end");
-    console.log(json);
     return json;
   } catch (error) {
     console.error(error);

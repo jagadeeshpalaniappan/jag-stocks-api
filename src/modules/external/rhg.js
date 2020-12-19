@@ -1,15 +1,16 @@
 const axios = require("axios");
 const _get = require("lodash.get");
+const { fetchStatus } = require("../common/constants");
 
 async function _getRhInfo({ stockId }) {
   try {
-    console.log("yf._getRhInfo:start");
+    console.log("rhg._getRhInfo:start");
     const url = `https://api.robinhood.com/instruments/?active_instruments_only=false&symbol=${stockId}`;
     const response = await axios.get(url);
-    console.log("yf._getRhInfo:end");
+    console.log("rhg._getRhInfo:end");
     return response.data;
   } catch (error) {
-    console.log("yf._getRhInfo:err");
+    console.log("rhg._getRhInfo:err");
     console.error(error);
   }
 }
@@ -19,7 +20,7 @@ async function _getRhGoldRating({ stockId, token }) {
     if (!token) return;
     const rhInfo = await _getRhInfo({ stockId });
     const rhId = _get(rhInfo, "results[0].id");
-    if (!rhId) return;
+    if (!rhId) return { fetchStatus: fetchStatus.NA };
 
     const options = {
       url: `https://api.robinhood.com/midlands/ratings/${rhId}/overview/`,
@@ -31,13 +32,15 @@ async function _getRhGoldRating({ stockId, token }) {
       method: "GET",
     };
 
-    console.log("yf._getRhGoldRating:start", options);
+    console.log("rhg._getRhGoldRating:start", options);
     const response = await axios(options);
-    console.log("yf._getRhGoldRating:end");
-    return response.data;
-  } catch (error) {
-    console.log("yf._getRhGoldRating:err");
-    console.error(error);
+    console.log("rhg._getRhGoldRating:end");
+    return { ...response.data, fetchStatus: fetchStatus.COMPLETED };
+  } catch (err) {
+    console.log("rhg._getRhGoldRating:err", err);
+    return _get(err, "response.status") === 404
+      ? { fetchStatus: fetchStatus.NA }
+      : null;
   }
 }
 
@@ -46,7 +49,6 @@ async function get({ stockId, token }) {
     console.log("rh.get:start");
     const json = await _getRhGoldRating({ stockId, token });
     console.log("rh.get:end");
-    console.log(json);
     return json;
   } catch (error) {
     console.error(error);

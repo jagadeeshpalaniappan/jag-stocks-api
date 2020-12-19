@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 const DB_URL = process.env.MONGODB_URI;
-console.log({ DB_URL });
+// console.log({ DB_URL });
 
 mongoose.Promise = global.Promise;
 
@@ -12,9 +12,12 @@ async function initDBConnection() {
   try {
     if (isDbInitialized) return;
 
-    console.log("initDBConnection:start", { DB_URL });
-    await mongoose.connect(DB_URL, { useNewUrlParser: true });
-    console.log("initDBConnection:end", { DB_URL });
+    console.log("initDBConnection:start");
+    await mongoose.connect(DB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("initDBConnection:end");
   } catch (error) {
     const err = { errCode: "DB-INIT-ERR", error };
     console.error("initDBConnection:err", err);
