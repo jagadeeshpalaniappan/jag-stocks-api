@@ -77,6 +77,8 @@ async function getStockAnalysis({ stockIds, token, forceUpdate }) {
   const updateStockIds = Object.keys(updateStockMap);
   const fetchStockIds = [...updateStockIds, ...newStockIds];
 
+  console.log("stockSvc.getStockAnalysis:", { fetchStockIds });
+
   for (let i = 0; i < fetchStockIds.length; i++) {
     const stockId = fetchStockIds[i];
     const { yf, rh, rhg } = await fetchStocksExt({ stockId, token });

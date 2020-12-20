@@ -17,7 +17,7 @@ async function _getRhInfo({ stockId }) {
 
 async function _getRhGoldRating({ stockId, token }) {
   try {
-    if (!token) return;
+    if (!token) return { fetchStatus: fetchStatus.NO_TOKEN };
     const rhInfo = await _getRhInfo({ stockId });
     const rhId = _get(rhInfo, "results[0].id");
     if (!rhId) return { fetchStatus: fetchStatus.NA };
@@ -37,14 +37,14 @@ async function _getRhGoldRating({ stockId, token }) {
     console.log("rhg._getRhGoldRating:end", { stockId });
     return { ...response.data, fetchStatus: fetchStatus.COMPLETED };
   } catch (err) {
+    const respStatus = _get(err, "response.status");
     console.log("rhg._getRhGoldRating:err", {
       stockId,
-      status: _get(err, "response.status"),
+      respStatus,
     });
     // console.error(err); // DO-NOT-PRINT
-    return _get(err, "response.status") === 404
-      ? { fetchStatus: fetchStatus.NA }
-      : null;
+    if (respStatus === 404) return { fetchStatus: fetchStatus.NA };
+    if (respStatus === 401) return { fetchStatus: fetchStatus.NO_TOKEN };
   }
 }
 
