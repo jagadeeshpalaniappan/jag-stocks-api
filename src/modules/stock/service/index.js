@@ -1,3 +1,4 @@
+const axios = require("axios");
 const _get = require("lodash.get");
 const stockDao = require("../dao");
 
@@ -122,6 +123,65 @@ async function getStockAnalysis({ stockIds, token, forceUpdate }) {
   return fetchedStockMap;
 }
 
+// ---------------- ASYNC ----------------
+
+const JAG_STOCKS_API = "http://jag-stocks-api-v1.vercel.app";
+// const JAG_STOCKS_API = "http://localhost:4000";
+
+async function _proxyFetchExtStockAnalysis({ stockId, extSrc, token }) {
+  try {
+    console.log("rhg._proxyFetchExtStockAnalysis:start", { stockId });
+    const url = `${JAG_STOCKS_API}/api/v1/fetchExtStockAnalysis`;
+    const options = { params: { stockId, extSrc } };
+    console.log("rhg._proxyFetchExtStockAnalysis:");
+    console.log({ url, options });
+
+    if (extSrc === "rhg") {
+      options.headers = { rhtoken: token };
+    }
+
+    const response = await axios.get(url, options);
+    console.log("rhg._proxyFetchExtStockAnalysis:end", { stockId });
+    return response.data;
+  } catch (err) {
+    console.log("rhg._proxyFetchExtStockAnalysis:err", { stockId });
+    console.error(err);
+  }
+}
+
+async function getStockAnalysisAsync({ stockIds, token, forceUpdate }) {
+  console.log("stockSvc.getStockAnalysisAsync:start");
+  const hisKey = _getHistoryKey();
+  const existingStockDocs = await stockDao.getStocksByStockIds({ stockIds });
+
+  const { fetchedStockMap, updateStockMap, newStockIds } = getFetchExtDocs({
+    stockIds,
+    existingStockDocs,
+    forceUpdate,
+    hisKey,
+  });
+
+  const updateStockIds = Object.keys(updateStockMap);
+  const fetchStockIds = [...updateStockIds, ...newStockIds];
+
+  console.log("stockSvc.getStockAnalysisAsync:", { fetchStockIds });
+
+  if (fetchStockIds && fetchStockIds.length > 0) {
+    console.log("stockSvc.getStockAnalysisAsync:hasNewStocks", fetchStockIds);
+    for (let i = 0; i < fetchStockIds.length; i++) {
+      const stockId = fetchStockIds[i];
+      // NO-AWAIT: FIRE & FORGET
+      _proxyFetchExtStockAnalysis({ stockId, extSrc: "yf" });
+      _proxyFetchExtStockAnalysis({ stockId, extSrc: "rh" });
+      _proxyFetchExtStockAnalysis({ stockId, extSrc: "rhg", token });
+    }
+  } else {
+    console.log("stockSvc.getStockAnalysisAsync:noNewStocks", stockIds);
+  }
+  console.log("stockSvc.getStockAnalysisAsync:end");
+  return fetchStockIds;
+}
+
 async function fetchExtStockAnalysis({ stockId, extSrc, token }) {
   console.log("stockSvc.fetchExtStockAnalysis:start");
   const hisKey = _getHistoryKey();
@@ -154,5 +214,6 @@ async function fetchExtStockAnalysis({ stockId, extSrc, token }) {
 module.exports = {
   getStocks,
   getStockAnalysis,
+  getStockAnalysisAsync,
   fetchExtStockAnalysis,
 };

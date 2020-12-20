@@ -5,6 +5,7 @@ const {
   getStocks,
   refreshStocks,
   getStockAnalysis,
+  getStockAnalysisAsync,
   fetchExtStockAnalysis,
 } = require("./stock");
 
@@ -15,7 +16,8 @@ router.get("/refreshStocks", refreshStocks); // GET-ALL
 
 router.post("/stockAnalysis", getStockAnalysis); // getStockAnalysis
 
-router.get("/fetchExtStockAnalysis", fetchExtStockAnalysis); // getStockAnalysis
+router.post("/getStockAnalysisAsync", getStockAnalysisAsync); // fetchExtStockAnalysis
+router.get("/fetchExtStockAnalysis", fetchExtStockAnalysis); // fetchExtStockAnalysis
 
 // router.get("/users/:id", getUser); // GET
 // router.post("/users", createUser); // CREATE

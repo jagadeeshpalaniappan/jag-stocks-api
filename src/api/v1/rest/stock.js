@@ -69,6 +69,30 @@ async function getStockAnalysis(req, res) {
 
 // ---------------- ASYNC ----------------
 
+async function getStockAnalysisAsync(req, res) {
+  try {
+    // VALIDATE:
+    // POPULATE:
+    const token = req.headers["rhtoken"];
+    const { stockIds: stockIdDups, forceUpdate } = req.body;
+    const stockIds = [...new Set(stockIdDups)];
+    console.log("getStockAnalysisAsync:start", { stockIds, forceUpdate });
+
+    // TX:
+    const stocksResp = await stockSvc.getStockAnalysisAsync({
+      stockIds,
+      token,
+      forceUpdate,
+    });
+
+    // RESP:
+    res.json(stocksResp);
+  } catch (error) {
+    console.log("getStockAnalysisAsync:err", error);
+    res.status(500).json({ error });
+  }
+}
+
 // GET: fetchExtStockAnalysis
 async function fetchExtStockAnalysis(req, res) {
   try {
@@ -97,5 +121,6 @@ module.exports = {
   getStocks,
   refreshStocks,
   getStockAnalysis,
+  getStockAnalysisAsync,
   fetchExtStockAnalysis,
 };
