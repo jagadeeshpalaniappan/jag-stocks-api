@@ -140,9 +140,9 @@ async function _proxyFetchExtStockAnalysis({ stockId, extSrc, token }) {
       options.headers = { rhtoken: token };
     }
 
-    const response = await axios.get(url, options);
+    // NO-AWAIT: FIRE & FORGET
+    axios.get(url, options);
     console.log("rhg._proxyFetchExtStockAnalysis:end", { stockId });
-    return response.data;
   } catch (err) {
     console.log("rhg._proxyFetchExtStockAnalysis:err", { stockId });
     console.error(err);
@@ -170,10 +170,9 @@ async function getStockAnalysisAsync({ stockIds, token, forceUpdate }) {
     console.log("stockSvc.getStockAnalysisAsync:hasNewStocks", fetchStockIds);
     for (let i = 0; i < fetchStockIds.length; i++) {
       const stockId = fetchStockIds[i];
-      // NO-AWAIT: FIRE & FORGET
-      _proxyFetchExtStockAnalysis({ stockId, extSrc: "yf" });
-      _proxyFetchExtStockAnalysis({ stockId, extSrc: "rh" });
-      _proxyFetchExtStockAnalysis({ stockId, extSrc: "rhg", token });
+      await _proxyFetchExtStockAnalysis({ stockId, extSrc: "yf" });
+      await _proxyFetchExtStockAnalysis({ stockId, extSrc: "rh" });
+      await _proxyFetchExtStockAnalysis({ stockId, extSrc: "rhg", token });
     }
   } else {
     console.log("stockSvc.getStockAnalysisAsync:noNewStocks", stockIds);
