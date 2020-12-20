@@ -122,7 +122,37 @@ async function getStockAnalysis({ stockIds, token, forceUpdate }) {
   return fetchedStockMap;
 }
 
+async function fetchExtStockAnalysis({ stockId, extSrc, token }) {
+  console.log("stockSvc.fetchExtStockAnalysis:start");
+  const hisKey = _getHistoryKey();
+  let yf, rh, rhg;
+
+  if (extSrc === "yf") {
+    yf = await yfSvc.get({ stockId });
+  }
+
+  if (extSrc === "rh") {
+    rh = await rhSvc.get({ stockId });
+  }
+
+  if (extSrc === "rhg") {
+    rhg = await rhgSvc.get({ stockId, token });
+  }
+
+  const stockDoc = await stockDao.createOrUpdateStockAnalysis({
+    stockId,
+    yf,
+    rh,
+    rhg,
+    hisKey,
+  });
+
+  console.log("stockSvc.fetchExtStockAnalysis:end");
+  return stockDoc;
+}
+
 module.exports = {
   getStocks,
   getStockAnalysis,
+  fetchExtStockAnalysis,
 };

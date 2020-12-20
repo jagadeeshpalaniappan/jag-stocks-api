@@ -1,14 +1,21 @@
 // API: REST-API
 
 var router = require("express").Router();
-const { getStocks, refreshStocks, getStockAnalysis } = require("./stock");
+const {
+  getStocks,
+  refreshStocks,
+  getStockAnalysis,
+  fetchExtStockAnalysis,
+} = require("./stock");
 
 // -------------------- USER  --------------------
 // /api/v1/users
 router.get("/stocks", getStocks); // GET-ALL
 router.get("/refreshStocks", refreshStocks); // GET-ALL
 
-router.post("/stockAnalysis", getStockAnalysis); // GET-ALL
+router.post("/stockAnalysis", getStockAnalysis); // getStockAnalysis
+
+router.get("/fetchExtStockAnalysis", fetchExtStockAnalysis); // getStockAnalysis
 
 // router.get("/users/:id", getUser); // GET
 // router.post("/users", createUser); // CREATE
