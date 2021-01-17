@@ -1,5 +1,6 @@
 const { StockAnalysis } = require("./model");
 const dao = require("./dao");
+const fetchExt = require("./external");
 
 /**
  * Load stockanalysis and append to req.
@@ -9,11 +10,42 @@ async function load(req, res, next) {
     // POPULATE:
     const { id } = req.params;
     // TX:
-    req.stockanalysis = await dao.get(id);
+    req.stockanalysis = await dao.getByStockId(id);
     // RESP:
     return next();
   } catch (error) {
     next(error);
+  }
+}
+
+async function getOrFetchExt(stockanalysisDoc, stockId, src) {
+  const stockanalysis = stockanalysisDoc || new StockAnalysis({ stockId });
+  const { yf, rh, rhg } = stockanalysis || {};
+
+  if (src === "yf") {
+    if (yf) return yf;
+    else {
+      // FETCH-EXT: YF
+      stockanalysis.yf = await fetchExt.get("yf", stockId);
+      stockanalysis.save();
+      return yf;
+    }
+  } else if (src === "rh") {
+    if (rh) return rh;
+    else {
+      // FETCH-EXT: rh
+      stockanalysis.rh = await fetchExt.get("rh", stockId);
+      stockanalysis.save();
+      return rh;
+    }
+  } else if (src === "rhg") {
+    if (rhg) return rhg;
+    else {
+      // FETCH-EXT: rhg
+      stockanalysis.rhg = await fetchExt.get("rhg", stockId);
+      stockanalysis.save();
+      return rhg;
+    }
   }
 }
 
@@ -23,6 +55,17 @@ async function load(req, res, next) {
  */
 function get(req, res) {
   return res.json(req.stockanalysis);
+}
+
+/**
+ * Get stockanalysis
+ * @returns {StockAnalysis}
+ */
+async function getSrc(req, res) {
+  const { id: stockId, src } = req.params;
+  const stockanalysis = req.stockanalysis;
+  const data = await getOrFetchExt(stockanalysis, stockId, src);
+  return res.json(data);
 }
 
 /**
@@ -40,54 +83,6 @@ async function getAll(req, res, next) {
     const stockanalysiss = await dao.getAll({ limit, skip });
     // RESP:
     res.json(stockanalysiss);
-  } catch (error) {
-    next(error);
-  }
-}
-
-/**
- * Create new stockanalysis
- * @property {string} req.body.articlename - The articlename of stockanalysis.
- * @property {string} req.body.mobileNumber - The mobileNumber of stockanalysis.
- * @returns {StockAnalysis}
- */
-async function create(req, res, next) {
-  try {
-    // POPULATE:
-    const { title, description, published, userId } = req.body;
-    // TX:
-    const savedStockAnalysis = await dao.create({
-      title,
-      description,
-      published,
-      userId,
-    });
-    // RESP:
-    res.json(savedStockAnalysis);
-  } catch (error) {
-    next(error);
-  }
-}
-
-/**
- * Update existing stockanalysis
- * @property {string} req.body.articlename - The articlename of stockanalysis.
- * @property {string} req.body.mobileNumber - The mobileNumber of stockanalysis.
- * @returns {StockAnalysis}
- */
-async function update(req, res, next) {
-  try {
-    // POPULATE:
-    const { title, description, published } = req.body;
-    const stockanalysis = req.stockanalysis;
-    if (title) stockanalysis.title = title;
-    if (description) stockanalysis.description = description;
-    if (published) stockanalysis.published = published;
-
-    // TX:
-    const savedStockAnalysis = await dao.update(stockanalysis);
-    // RESP:
-    res.json(savedStockAnalysis);
   } catch (error) {
     next(error);
   }
@@ -125,4 +120,4 @@ async function removeAll(req, res, next) {
   }
 }
 
-module.exports = { load, get, getAll, create, update, remove, removeAll };
+module.exports = { load, get, getSrc, getAll, remove, removeAll };

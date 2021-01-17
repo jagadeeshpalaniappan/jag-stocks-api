@@ -21,7 +21,7 @@ const update = {
     userId: Joi.string().required(),
   },
   params: {
-    id: Joi.string().hex().required(),
+    id: Joi.string().required(),
   },
 };
 

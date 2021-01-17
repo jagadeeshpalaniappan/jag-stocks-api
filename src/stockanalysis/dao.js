@@ -3,19 +3,13 @@ const { StockAnalysis } = require("./model");
 const APIError = require("../app/helpers/APIError");
 
 /**
- * get: stockanalysis
+ * get: stock
  */
-async function get(id) {
+async function getByStockId(stockId) {
   // TX:
-  const stockanalysis = await StockAnalysis.findById(id);
-
-  // IF-ERR:
-  if (!stockanalysis)
-    throw new APIError("No such stockanalysis exists!", httpStatus.NOT_FOUND);
-
-  return stockanalysis;
+  const stock = await StockAnalysis.findOne({ stockId });
+  return stock;
 }
-
 /**
  * Get stockanalysis list.
  * List the stockanalysiss in descending order of 'createdAt' timestamp.
@@ -73,4 +67,4 @@ async function removeAll(stockanalysis) {
   return deletedUser;
 }
 
-module.exports = { get, getAll, create, update, remove, removeAll };
+module.exports = { getByStockId, getAll, create, update, remove, removeAll };

@@ -5,10 +5,11 @@ const mongoose = require("mongoose");
  */
 const StockAnalysisSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: String,
-    published: Boolean,
-    userId: { type: String, required: true },
+    stockId: { type: String, required: true },
+    name: String,
+    yf: Object,
+    rh: Object,
+    rhg: Object,
   },
   { timestamps: true }
 );

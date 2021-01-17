@@ -8,22 +8,13 @@ router
   /** GET /api/stockanalysiss - Get list of stockanalysiss */
   .get(ctrl.getAll)
 
-  /** POST /api/stockanalysiss - Create new stockanalysis */
-  .post(validate(valdn.create), ctrl.create)
-
   /** DELETE /api/stockanalysiss - Delete All stockanalysiss */
   .delete(ctrl.removeAll);
 
-router
-  .route("/:id")
-  /** GET /api/stockanalysiss/:id - Get stockanalysis */
-  .get(ctrl.get)
+/** DELETE /api/stockanalysiss/:id - Delete stockanalysis */
+router.route("/:id").get(ctrl.get).delete(ctrl.remove);
 
-  /** PUT /api/stockanalysiss/:id - Update stockanalysis */
-  .put(validate(valdn.update), ctrl.update)
-
-  /** DELETE /api/stockanalysiss/:id - Delete stockanalysis */
-  .delete(ctrl.remove);
+router.route("/:id/:src").get(validate(valdn.getSrc), ctrl.getSrc);
 
 /** Load stockanalysis when API with id route parameter is hit */
 router.param("id", ctrl.load);

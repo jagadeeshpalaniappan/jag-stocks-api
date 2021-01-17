@@ -1,26 +1,11 @@
 const Joi = require("joi");
 
-// POST /api/stockanalysiss
-const create = {
-  body: {
-    title: Joi.string().min(3).max(30).required(),
-    description: Joi.string(),
-    published: Joi.boolean(),
-    userId: Joi.string().required(),
-  },
-};
-
-// UPDATE /api/stockanalysiss/:id
-const update = {
-  body: {
-    title: Joi.string().min(3).max(30),
-    description: Joi.string(),
-    published: Joi.boolean(),
-    userId: Joi.string().required(),
-  },
+// GET /api/stockanalysiss/:id
+const getSrc = {
   params: {
-    id: Joi.string().hex().required(),
+    id: Joi.string().required(),
+    src: Joi.string().valid("yf", "rh", "rhg").required(),
   },
 };
 
-module.exports = { create, update };
+module.exports = { getSrc };
