@@ -8,15 +8,29 @@
     "start": "vercel dev"
   },
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "apollo-server-express": "^2.15.0",
     "axios": "^0.21.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.16.4",
     "express-validator": "^6.5.0",
     "jsdom": "^16.4.0",
     "lodash.get": "^4.4.2",
+    "bluebird": "3.5.1",
+    "body-parser": "1.18.2",
+    "compression": "1.7.2",
+    "cookie-parser": "1.4.3",
+    "cors": "2.8.4",
+    "debug": "^2.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.4",
+    "express-jwt": "5.3.1",
+    "express-validation": "1.0.2",
+    "express-winston": "2.5.0",
+    "helmet": "3.12.0",
+    "http-status": "1.0.1",
+    "joi": "10.6.0",
+    "jsonwebtoken": "7.1.9",
+    "method-override": "^2.3.10",
     "mongoose": "^5.11.7",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "winston": "2.4.1"
   }
 }

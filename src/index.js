@@ -1,25 +1,10 @@
-require("dotenv").config();
-const db = require("./modules/common/db");
-const morgan = require("morgan");
-const express = require("express");
-const apiV1 = require("./api/v1/index");
+const db = require("./app/db");
+const express = require("./app/express");
+const config = require("./app/config");
 
-// INIT:
-// db.initDBConnection();
+db.init();
 
-// MIDDLEWARE:
-const app = express();
-app.use(express.json());
-app.use(morgan("dev"));
+// DO-NOT-RUN-EXPRESS-ON-SERVERLESS
+if (!config.isServerLess) express.init();
 
-app.use(async function (req, res, next) {
-  console.log("middleware:start", req.originalUrl);
-  // SERVER-LESS-FN: INIT-DB forEveryReq
-  await db.initDBConnection();
-  console.log("middleware:end");
-  next();
-});
-
-// API:
-app.use("/api/v1", apiV1);
-module.exports = app;
+module.exports = express.app;
