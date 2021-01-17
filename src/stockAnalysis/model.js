@@ -7,9 +7,22 @@ const StockAnalysisSchema = new mongoose.Schema(
   {
     stockId: { type: String, required: true },
     name: String,
-    yf: Object,
-    rh: Object,
-    rhg: Object,
+    history: {
+      type: Map,
+      of: Object,
+    },
+    yf: {
+      type: Map,
+      of: Object,
+    },
+    rh: {
+      type: Map,
+      of: Object,
+    },
+    rhg: {
+      type: Map,
+      of: Object,
+    },
   },
   { timestamps: true }
 );

@@ -1,6 +1,7 @@
 const { StockAnalysis } = require("./model");
 const dao = require("./dao");
 const fetchExt = require("./external");
+const utils = require("../modules/common/utils");
 
 /**
  * Load stockanalysis and append to req.
@@ -18,34 +19,20 @@ async function load(req, res, next) {
   }
 }
 
-async function getOrFetchExt(stockanalysisDoc, stockId, src) {
-  const stockanalysis = stockanalysisDoc || new StockAnalysis({ stockId });
-  const { yf, rh, rhg } = stockanalysis || {};
+async function getOrFetchExt(stockanalysis, stockId, src) {
+  const doc = stockanalysis || new StockAnalysis({ stockId });
+  const hisKey = utils._getHistoryKey();
+  const path = `${src}.${hisKey}`;
 
-  if (src === "yf") {
-    if (yf) return stockanalysis;
-    else {
-      // FETCH-EXT: YF
-      stockanalysis.yf = await fetchExt.get("yf", stockId);
-      await stockanalysis.save();
-      return stockanalysis;
-    }
-  } else if (src === "rh") {
-    if (rh) return stockanalysis;
-    else {
-      // FETCH-EXT: rh
-      stockanalysis.rh = await fetchExt.get("rh", stockId);
-      await stockanalysis.save();
-      return stockanalysis;
-    }
-  } else if (src === "rhg") {
-    if (rhg) return stockanalysis;
-    else {
-      // FETCH-EXT: rhg
-      stockanalysis.rhg = await fetchExt.get("rhg", stockId);
-      await stockanalysis.save();
-      return stockanalysis;
-    }
+  console.log("getOrFetchExt", { path, stockanalysis });
+
+  if (doc.get(path)) return stockanalysis;
+  else {
+    // FETCH-EXT: (src: yf/rh/rhg)
+    const data = await fetchExt.get(src, stockId);
+    doc.set(path, data);
+    await doc.save();
+    return doc;
   }
 }
 

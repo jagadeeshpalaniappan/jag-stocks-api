@@ -22,12 +22,15 @@ async function getByStockId(stockId) {
  * @property {number} obj.limit - Limit number of stocks to be returned.
  * @returns {Stock[]}
  */
-async function getAll({ limit, skip }) {
-  return Stock.find()
+async function getAll({ limit, skip, populates }) {
+  const query = Stock.find()
     .sort({ createdAt: -1 })
     .skip(+skip)
-    .limit(+limit)
-    .exec();
+    .limit(+limit);
+  for (const populate of populates) {
+    query.populate(populate);
+  }
+  return query.exec();
 }
 
 /**

@@ -18,8 +18,20 @@ const StockSchema = new mongoose.Schema(
     isResearch: Boolean,
     userId: { type: String, required: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
+  }
 );
+
+// Foreign keys definitions
+StockSchema.virtual("analysis", {
+  ref: "StockAnalysis",
+  localField: "stockId",
+  foreignField: "stockId",
+  justOne: true, // for many-to-1 relationships
+});
 
 /**
  * @typedef Stock

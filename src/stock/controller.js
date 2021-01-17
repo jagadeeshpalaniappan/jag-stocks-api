@@ -35,9 +35,10 @@ function get(req, res) {
 async function getAll(req, res, next) {
   try {
     // POPULATE:
-    const { limit = 50, skip = 0 } = req.query;
+    const { limit = 500, skip = 0 } = req.query;
+    const populates = ["analysis"];
     // TX:
-    const stocks = await dao.getAll({ limit, skip });
+    const stocks = await dao.getAll({ limit, skip, populates });
     // RESP:
     res.json(stocks);
   } catch (error) {
