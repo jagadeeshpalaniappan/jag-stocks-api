@@ -11,7 +11,7 @@ const BuyStatsSchema = new mongoose.Schema({
  */
 const StockSchema = new mongoose.Schema(
   {
-    stockId: { type: String, required: true, index: true, unique: true },
+    stockId: { type: String, required: true, index: true },
     quantity: Number,
     avgPrice: Number,
     buyStats: BuyStatsSchema,
