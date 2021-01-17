@@ -36,6 +36,6 @@ StockSchema.virtual("analysis", {
 /**
  * @typedef Stock
  */
-const Stock = mongoose.model("Stock", StockSchema);
+const Stock = mongoose.model("Stock", StockSchema, "mystocks");
 
 module.exports = { StockSchema, BuyStatsSchema, Stock };
