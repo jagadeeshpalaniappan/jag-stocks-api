@@ -3,9 +3,11 @@ const Joi = require("joi");
 // POST /api/stocks
 const create = {
   body: {
-    title: Joi.string().min(3).max(30).required(),
-    description: Joi.string(),
-    published: Joi.boolean(),
+    stockId: Joi.string().max(5).required(),
+    quantity: Joi.number(),
+    avgPrice: Joi.number(),
+    buyStats: Joi.object(),
+    isResearch: Joi.boolean(),
     userId: Joi.string().required(),
   },
 };

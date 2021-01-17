@@ -9,7 +9,7 @@ async function load(req, res, next) {
     // POPULATE:
     const { id } = req.params;
     // TX:
-    req.stock = await dao.get(id);
+    req.stock = await dao.getByStockId(id);
     // RESP:
     return next();
   } catch (error) {
@@ -54,12 +54,22 @@ async function getAll(req, res, next) {
 async function create(req, res, next) {
   try {
     // POPULATE:
-    const { title, description, published, userId } = req.body;
+    const {
+      stockId,
+      quantity,
+      avgPrice,
+      buyStats,
+      isResearch,
+      userId,
+    } = req.body;
+
     // TX:
     const savedStock = await dao.create({
-      title,
-      description,
-      published,
+      stockId,
+      quantity,
+      avgPrice,
+      buyStats,
+      isResearch,
       userId,
     });
     // RESP:
@@ -78,11 +88,21 @@ async function create(req, res, next) {
 async function update(req, res, next) {
   try {
     // POPULATE:
-    const { title, description, published } = req.body;
+    const {
+      stockId,
+      quantity,
+      avgPrice,
+      buyStats,
+      isResearch,
+      userId,
+    } = req.body;
     const stock = req.stock;
-    if (title) stock.title = title;
-    if (description) stock.description = description;
-    if (published) stock.published = published;
+    if (stockId) stock.stockId = stockId;
+    if (quantity) stock.quantity = quantity;
+    if (avgPrice) stock.avgPrice = avgPrice;
+    if (buyStats) stock.buyStats = buyStats;
+    if (isResearch) stock.isResearch = isResearch;
+    if (userId) stock.userId = userId;
 
     // TX:
     const savedStock = await dao.update(stock);

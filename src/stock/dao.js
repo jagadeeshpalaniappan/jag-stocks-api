@@ -5,9 +5,9 @@ const APIError = require("../app/helpers/APIError");
 /**
  * get: stock
  */
-async function get(id) {
+async function getByStockId(stockId) {
   // TX:
-  const stock = await Stock.findById(id);
+  const stock = await Stock.findOne({ stockId });
 
   // IF-ERR:
   if (!stock) throw new APIError("No such stock exists!", httpStatus.NOT_FOUND);
@@ -72,4 +72,4 @@ async function removeAll(stock) {
   return deletedUser;
 }
 
-module.exports = { get, getAll, create, update, remove, removeAll };
+module.exports = { getByStockId, getAll, create, update, remove, removeAll };

@@ -1,38 +1,29 @@
 const mongoose = require("mongoose");
 
+const BuyStatsSchema = new mongoose.Schema({
+  divident: String,
+  yfRating: String,
+  rhRating: String,
+});
+
 /**
  * Stock Schema
  */
 const StockSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: String,
-    published: Boolean,
+    stockId: { type: String, required: true },
+    quantity: Number,
+    avgPrice: Number,
+    buyStats: BuyStatsSchema,
+    isResearch: Boolean,
     userId: { type: String, required: true },
   },
   { timestamps: true }
 );
 
 /**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
- */
-
-/**
- * Methods
- */
-StockSchema.method({});
-
-/**
- * Statics
- */
-StockSchema.statics = {};
-
-/**
  * @typedef Stock
  */
 const Stock = mongoose.model("Stock", StockSchema);
 
-module.exports = { StockSchema, Stock };
+module.exports = { StockSchema, BuyStatsSchema, Stock };
