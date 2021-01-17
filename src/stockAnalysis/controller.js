@@ -23,7 +23,7 @@ async function getOrFetchExt(stockanalysisDoc, stockId, src) {
   const { yf, rh, rhg } = stockanalysis || {};
 
   if (src === "yf") {
-    if (yf) return yf;
+    if (yf) return stockanalysis;
     else {
       // FETCH-EXT: YF
       stockanalysis.yf = await fetchExt.get("yf", stockId);
@@ -31,7 +31,7 @@ async function getOrFetchExt(stockanalysisDoc, stockId, src) {
       return stockanalysis;
     }
   } else if (src === "rh") {
-    if (rh) return rh;
+    if (rh) return stockanalysis;
     else {
       // FETCH-EXT: rh
       stockanalysis.rh = await fetchExt.get("rh", stockId);
@@ -39,7 +39,7 @@ async function getOrFetchExt(stockanalysisDoc, stockId, src) {
       return stockanalysis;
     }
   } else if (src === "rhg") {
-    if (rhg) return rhg;
+    if (rhg) return stockanalysis;
     else {
       // FETCH-EXT: rhg
       stockanalysis.rhg = await fetchExt.get("rhg", stockId);
