@@ -28,7 +28,7 @@ async function getOrFetchExt(stockanalysisDoc, stockId, src) {
       // FETCH-EXT: YF
       stockanalysis.yf = await fetchExt.get("yf", stockId);
       await stockanalysis.save();
-      return yf;
+      return stockanalysis;
     }
   } else if (src === "rh") {
     if (rh) return rh;
@@ -36,7 +36,7 @@ async function getOrFetchExt(stockanalysisDoc, stockId, src) {
       // FETCH-EXT: rh
       stockanalysis.rh = await fetchExt.get("rh", stockId);
       await stockanalysis.save();
-      return rh;
+      return stockanalysis;
     }
   } else if (src === "rhg") {
     if (rhg) return rhg;
@@ -44,7 +44,7 @@ async function getOrFetchExt(stockanalysisDoc, stockId, src) {
       // FETCH-EXT: rhg
       stockanalysis.rhg = await fetchExt.get("rhg", stockId);
       await stockanalysis.save();
-      return rhg;
+      return stockanalysis;
     }
   }
 }
