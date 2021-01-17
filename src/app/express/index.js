@@ -3,6 +3,7 @@ const express = require("express");
 const config = require("../config");
 
 const apiRoutes = require("./apiRoutes");
+const gqlRoutes = require("../graphql");
 // const gqlRoutes = require("../../api/v1/graphql");
 
 const preMiddlewares = require("./preMiddlewares");
@@ -14,7 +15,7 @@ const app = express();
 preMiddlewares(app);
 
 app.get("/", (req, res) => res.send("Welcome to 'jag-stocks' api"));
-// app.use("/graphql", gqlRoutes); // graphql: routes
+app.use("/graphql", gqlRoutes); // graphql: routes
 app.use("/api", apiRoutes); // api: routes
 
 // preMiddlewares: execute after "/api" routes

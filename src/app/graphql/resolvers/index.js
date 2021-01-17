@@ -1,10 +1,10 @@
 // const commonResolvers = require("./common");
-const stockResolvers = require("./stock");
+// const stockResolvers = require("./stock");
 
 const resolvers = {
   Query: {
     hello: () => "Hello Jag1!!!!!",
-    ...stockResolvers.Query,
+    // ...stockResolvers.Query,
   },
   Mutation: {
     // ...commonResolvers.Mutation,
