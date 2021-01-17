@@ -36,9 +36,18 @@ if (config.mongooseDebug) {
 function init() {
   // mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
   // console.log("MONGODB_URL:", mongoUri);
-  mongoose.connect(mongoUri, {
+  return mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 }
-module.exports = { init };
+
+function initMiddleware() {
+  return async (req, res, next) => {
+    console.log("db:middleware:start", req.originalUrl);
+    await init();
+    console.log("db:middleware:end");
+    next();
+  };
+}
+module.exports = { init, initMiddleware };

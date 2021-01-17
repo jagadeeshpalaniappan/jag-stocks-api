@@ -8,6 +8,7 @@ const helmet = require("helmet");
 // const expressWinston = require("express-winston");
 // const winstonInstance = require("../winston");
 const config = require("../config");
+const db = require("../db");
 
 module.exports = (app) => {
   if (config.env === "development") {
@@ -42,4 +43,7 @@ module.exports = (app) => {
   //     })
   //   );
   // }
+
+  // SERVER-LESS-FN: INIT-DB forEveryReq
+  app.use(db.initMiddleware());
 };
