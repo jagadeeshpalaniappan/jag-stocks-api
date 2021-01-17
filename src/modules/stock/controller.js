@@ -1,5 +1,6 @@
-const { Stock } = require("./model");
-const dao = require("./dao");
+const httpStatus = require("http-status");
+const APIError = require("../../app/helpers/APIError");
+const svc = require("./service");
 
 /**
  * Load stock and append to req.
@@ -9,7 +10,10 @@ async function load(req, res, next) {
     // POPULATE:
     const { id } = req.params;
     // TX:
-    req.stock = await dao.getByStockId(id);
+    const doc = await svc.getByStockId(id);
+    // IF-ERR:
+    if (!doc) throw new APIError("No such stock exists!", httpStatus.NOT_FOUND);
+    req.stock = doc;
     // RESP:
     return next();
   } catch (error) {
@@ -38,7 +42,7 @@ async function getAll(req, res, next) {
     const { limit = 500, skip = 0 } = req.query;
     const populates = ["analysis"];
     // TX:
-    const stocks = await dao.getAll({ limit, skip, populates });
+    const stocks = await svc.getAll({ limit, skip, populates });
     // RESP:
     res.json(stocks);
   } catch (error) {
@@ -64,8 +68,14 @@ async function create(req, res, next) {
       userId,
     } = req.body;
 
+    // DB-VALIDATION:
+    const doc = await svc.getByStockId(stockId);
+    // IF-ERR:
+    if (doc)
+      throw new APIError("Stock Already exists!", httpStatus.BAD_REQUEST, true);
+
     // TX:
-    const savedStock = await dao.create({
+    const savedStock = await svc.create({
       stockId,
       quantity,
       avgPrice,
@@ -106,7 +116,7 @@ async function update(req, res, next) {
     if (userId) stock.userId = userId;
 
     // TX:
-    const savedStock = await dao.update(stock);
+    const savedStock = await svc.update(stock);
     // RESP:
     res.json(savedStock);
   } catch (error) {
@@ -123,7 +133,7 @@ async function remove(req, res, next) {
     // POPULATE:
     const stock = req.stock;
     // TX:
-    const deletedUser = await dao.remove(stock);
+    const deletedUser = await svc.remove(stock);
     // RESP:
     res.json(deletedUser);
   } catch (error) {
@@ -138,7 +148,7 @@ async function remove(req, res, next) {
 async function removeAll(req, res, next) {
   try {
     // TX:
-    const deletedUser = await dao.removeAll();
+    const deletedUser = await svc.removeAll();
     // RESP:
     res.json({ message: `${deletedUser.deletedCount} records deleted` });
   } catch (error) {

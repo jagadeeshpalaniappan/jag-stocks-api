@@ -13,7 +13,9 @@ router
 
 /** DELETE /api/stockanalysiss/:id - Delete stockanalysis */
 router.route("/:id").get(ctrl.get).delete(ctrl.remove);
-router.route("/:id/:src").get(validate(valdn.getSrc), ctrl.getSrc);
+router
+  .route("/:id/:src")
+  .get(validate(valdn.getOrFetchExt), ctrl.getOrFetchExt);
 
 /** Load stockanalysis when API with id route parameter is hit */
 router.param("id", ctrl.load);

@@ -5,7 +5,7 @@ const expressValidation = require("express-validation");
 const APIError = require("../helpers/APIError");
 const config = require("../config");
 
-const convertToAPIError = (err) => {
+const convertErrToAPIError = (err) => {
   if (err instanceof expressValidation.ValidationError) {
     // convert: ValidationError to 'APIError'
     const messages = err.errors.reduce((res, error) => {
@@ -26,7 +26,7 @@ module.exports = (app) => {
   // if error is not an instanceOf APIError, convert it.
   app.use((err, req, res, next) => {
     console.error("ERR1", err);
-    const apiError = convertToAPIError(err);
+    const apiError = convertErrToAPIError(err);
     return next(apiError);
   });
 

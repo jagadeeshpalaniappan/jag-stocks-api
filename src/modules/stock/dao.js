@@ -1,18 +1,11 @@
-const httpStatus = require("http-status");
 const { Stock } = require("./model");
-const APIError = require("../../app/helpers/APIError");
 
 /**
  * get: stock
  */
 async function getByStockId(stockId) {
   // TX:
-  const stock = await Stock.findOne({ stockId });
-
-  // IF-ERR:
-  if (!stock) throw new APIError("No such stock exists!", httpStatus.NOT_FOUND);
-
-  return stock;
+  return Stock.findOne({ stockId });
 }
 
 /**
