@@ -1,8 +1,5 @@
 const Joi = require("joi");
 
-// require and configure dotenv, will load vars in .env in PROCESS.ENV
-require("dotenv").config();
-
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
@@ -17,7 +14,7 @@ const envVarsSchema = Joi.object({
   JWT_SECRET: Joi.string()
     .required()
     .description("JWT Secret required to sign"),
-  MONGO_HOST: Joi.string().required().description("Mongo DB host url"),
+  MONGODB_URL: Joi.string().required().description("Mongo DB host url"),
   IS_SERVER_LESS: Joi.boolean().default(false),
 })
   .unknown()
@@ -34,9 +31,10 @@ const config = {
   mongooseDebug: envVars.MONGOOSE_DEBUG,
   jwtSecret: envVars.JWT_SECRET,
   mongo: {
-    host: envVars.MONGO_HOST,
+    host: envVars.MONGODB_URL,
   },
   isServerLess: envVars.IS_SERVER_LESS,
 };
 
+// console.log("appConfig", config);
 module.exports = config;

@@ -18,7 +18,5 @@
       "dest": "/index.js"
     }
   ],
-  "env": {
-    "MONGODB_URI": "@my-mongodb-uri"
-  }
+  "env": {}
 }

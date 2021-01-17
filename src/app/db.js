@@ -18,7 +18,7 @@ const mongoUri = config.mongo.host;
 mongoose.connection.on("error", () => {
   // eslint-disable-next-line no-console
   console.error("DB:CONNECTION-FAILED");
-  throw new Error(`unable to connect to database: ${mongoUri}`);
+  throw new Error(`unable to connect to database:`);
 });
 
 mongoose.connection.once("open", function () {
@@ -35,6 +35,7 @@ if (config.mongooseDebug) {
 
 function init() {
   // mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
+  // console.log("MONGODB_URL:", mongoUri);
   mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
