@@ -2,7 +2,7 @@ const _get = require("lodash.get");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const { getPage } = require("./utils");
-const { fetchStatus } = require("../../modules/common/constants");
+const { fetchStatus } = require("../../common/constants");
 
 const URL = "https://finance.yahoo.com/quote";
 

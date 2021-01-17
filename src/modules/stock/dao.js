@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
 const { Stock } = require("./model");
-const APIError = require("../app/helpers/APIError");
+const APIError = require("../../app/helpers/APIError");
 
 /**
  * get: stock

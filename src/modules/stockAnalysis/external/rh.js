@@ -2,7 +2,7 @@ const axios = require("axios");
 const _get = require("lodash.get");
 const { JSDOM } = require("jsdom");
 const { getPage } = require("./utils");
-const { fetchStatus } = require("../../modules/common/constants");
+const { fetchStatus } = require("../../common/constants");
 
 const URL = "https://robinhood.com/stocks";
 

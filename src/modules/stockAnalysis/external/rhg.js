@@ -1,6 +1,6 @@
 const axios = require("axios");
 const _get = require("lodash.get");
-const { fetchStatus } = require("../../modules/common/constants");
+const { fetchStatus } = require("../../common/constants");
 
 async function _getRhInfo({ stockId }) {
   try {

@@ -1,6 +1,6 @@
 const express = require("express");
-const stockRoutes = require("../../stock/routes");
-const stockAnalysisRoutes = require("../../stockAnalysis/routes");
+const stockRoutes = require("../../modules/stock/routes");
+const stockAnalysisRoutes = require("../../modules/stockAnalysis/routes");
 
 const router = express.Router(); // eslint-disable-line new-cap
 

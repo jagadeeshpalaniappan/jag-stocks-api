@@ -1,7 +1,7 @@
 const { StockAnalysis } = require("./model");
 const dao = require("./dao");
 const fetchExt = require("./external");
-const utils = require("../modules/common/utils");
+const utils = require("../common/utils");
 
 /**
  * Load stockanalysis and append to req.
