@@ -1,6 +1,6 @@
 const express = require("express");
 const stockRoutes = require("../../stock/routes");
-const stockAnalysisRoutes = require("../../stockAnalysis/routes");
+// const stockAnalysisRoutes = require("../../stockAnalysis/routes");
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -8,6 +8,6 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router.get("/health-check", (req, res) => res.send("OK"));
 router.use("/stocks", stockRoutes);
-router.use("/stockanalysis", stockAnalysisRoutes);
+// router.use("/stockanalysis", stockAnalysisRoutes);
 
 module.exports = router;
