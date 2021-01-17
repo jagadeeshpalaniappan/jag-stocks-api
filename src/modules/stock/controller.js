@@ -59,26 +59,13 @@ async function getAll(req, res, next) {
 async function create(req, res, next) {
   try {
     // POPULATE:
-    const {
-      stockId,
-      quantity,
-      avgPrice,
-      buyStats,
-      isResearch,
-      userId,
-    } = req.body;
-
+    const isMany = Array.isArray(req.body);
+    const stocks = isMany ? req.body : [req.body];
     // TX:
-    const savedStock = await svc.create({
-      stockId,
-      quantity,
-      avgPrice,
-      buyStats,
-      isResearch,
-      userId,
-    });
+    const savedStocks = await svc.create(stocks);
     // RESP:
-    res.json(savedStock);
+    const data = isMany ? savedStocks : savedStocks[0];
+    res.json(data);
   } catch (error) {
     next(error);
   }

@@ -1,16 +1,21 @@
 const Joi = require("joi");
 
 // POST /api/stocks
+const createStock = Joi.object({
+  stockId: Joi.string().max(5).required(),
+  quantity: Joi.number(),
+  avgPrice: Joi.number(),
+  buyStats: Joi.object(),
+  isResearch: Joi.boolean(),
+  userId: Joi.string().required(),
+});
+
 const create = {
-  body: {
-    stockId: Joi.string().max(5).required(),
-    quantity: Joi.number(),
-    avgPrice: Joi.number(),
-    buyStats: Joi.object(),
-    isResearch: Joi.boolean(),
-    userId: Joi.string().required(),
-  },
+  body: Joi.alternatives().try(createStock, Joi.array().items(createStock)),
+  options: { contextRequest: true },
 };
+
+const CreateManySchema = Joi.array().items(create);
 
 // UPDATE /api/stocks/:id
 const update = {

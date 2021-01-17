@@ -36,11 +36,13 @@ async function getAll({ limit, skip, populates }) {
  * @property {string} obj.published - The published of stock.
  * @returns {Stock}
  */
-async function create(obj) {
+async function create(stocks) {
   try {
-    const stock = new Stock(obj);
-    const savedStock = await stock.save();
-    return savedStock;
+    // POPULATE:
+    const stockDocs = stocks.map((stock) => new Stock(stock));
+    // TX:
+    const data = await Stock.create(stockDocs);
+    return data;
   } catch (error) {
     //duplicate key
     if (error && error.code === mongoErrCodes.DUPLICATE_KEY) {
