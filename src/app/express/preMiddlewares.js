@@ -45,5 +45,5 @@ module.exports = (app) => {
   // }
 
   // SERVER-LESS-FN: INIT-DB forEveryReq
-  app.use(db.initMiddleware());
+  if (config.isServerLess) app.use(db.initMiddleware());
 };

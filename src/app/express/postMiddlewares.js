@@ -32,7 +32,7 @@ function handleErr() {
 
 function handle404() {
   return (req, res, next) => {
-    // console.error("ERR2: 404");
+    console.error("ERR2: 404");
     const err = new APIError("API not found", httpStatus.NOT_FOUND);
     return next(err);
   };
@@ -42,6 +42,7 @@ function handle404() {
 function handleErrToResp() {
   // eslint-disable-next-line no-unused-vars
   return (err, req, res, next) => {
+    console.error("ERR-to-RESP");
     return res.status(err.status).json({
       message: err.isPublic ? err.message : httpStatus[err.status],
       stack: config.env === "development" ? err.stack : {},

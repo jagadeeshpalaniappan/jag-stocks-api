@@ -5,7 +5,8 @@
   "author": "Jagadeesh Palaniappan",
   "main": "index.js",
   "scripts": {
-    "start": "vercel dev"
+    "start": "vercel dev",
+    "local": "NODE_ENV=local nodemon local.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.15.0",
