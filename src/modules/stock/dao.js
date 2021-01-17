@@ -1,4 +1,7 @@
+const httpStatus = require("http-status");
+const APIError = require("../../app/helpers/APIError");
 const { Stock } = require("./model");
+const { mongoErrCodes } = require("../common/constants");
 
 /**
  * get: stock
@@ -34,9 +37,21 @@ async function getAll({ limit, skip, populates }) {
  * @returns {Stock}
  */
 async function create(obj) {
-  const stock = new Stock(obj);
-  const savedStock = await stock.save();
-  return savedStock;
+  try {
+    const stock = new Stock(obj);
+    const savedStock = await stock.save();
+    return savedStock;
+  } catch (error) {
+    //duplicate key
+    if (error && error.code === mongoErrCodes.DUPLICATE_KEY) {
+      throw new APIError(
+        `[${obj.stockId}] Stock Already exists! `,
+        httpStatus.BAD_REQUEST,
+        true
+      );
+    }
+    throw error;
+  }
 }
 
 /**

@@ -4,4 +4,8 @@ const fetchStatus = {
   NO_TOKEN: "NO_TOKEN",
 };
 
-module.exports = { fetchStatus };
+const mongoErrCodes = {
+  DUPLICATE_KEY: 11000,
+};
+
+module.exports = { fetchStatus, mongoErrCodes };

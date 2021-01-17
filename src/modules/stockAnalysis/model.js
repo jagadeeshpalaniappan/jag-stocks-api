@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
  */
 const StockAnalysisSchema = new mongoose.Schema(
   {
-    stockId: { type: String, required: true },
+    stockId: { type: String, required: true, index: true, unique: true },
     name: String,
     history: {
       type: Map,

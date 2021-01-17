@@ -68,16 +68,6 @@ async function create(req, res, next) {
       userId,
     } = req.body;
 
-    // DB-VALIDATION:
-    const doc = await svc.getByStockId(stockId);
-    // IF-ERR:
-    if (doc)
-      throw new APIError(
-        `[${stockId}] Stock Already exists! `,
-        httpStatus.BAD_REQUEST,
-        true
-      );
-
     // TX:
     const savedStock = await svc.create({
       stockId,
