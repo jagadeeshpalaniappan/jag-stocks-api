@@ -33,13 +33,24 @@ if (config.mongooseDebug) {
   });
 }
 
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  autoIndex: true,
+  // useCreateIndex: true,
+  // keepAlive: true,
+  // poolSize: 10,
+  // bufferMaxEntries: 0,
+  // connectTimeoutMS: 10000,
+  // socketTimeoutMS: 45000,
+  // family: 4, // Use IPv4, skip trying IPv6
+  // useFindAndModify: false,
+};
+
 function init() {
   // mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
   // console.log("MONGODB_URL:", mongoUri);
-  return mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  return mongoose.connect(mongoUri, options);
 }
 
 function initMiddleware() {
