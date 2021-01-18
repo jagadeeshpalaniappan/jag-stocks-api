@@ -33,6 +33,13 @@ StockSchema.virtual("analysis", {
   justOne: true, // for many-to-1 relationships
 });
 
+const toJSON = function () {
+  const { __v, _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
+};
+// StockSchema.method("toJSON", toJSON);
+
 /**
  * @typedef Stock
  */

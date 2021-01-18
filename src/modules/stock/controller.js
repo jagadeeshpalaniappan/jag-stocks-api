@@ -42,9 +42,9 @@ async function getAll(req, res, next) {
     const { limit = 500, skip = 0 } = req.query;
     const populates = ["analysis"];
     // TX:
-    const stocks = await svc.getAll({ limit, skip, populates });
+    const data = await svc.getAll({ limit, skip, populates });
     // RESP:
-    res.json(stocks);
+    res.json({ data });
   } catch (error) {
     next(error);
   }

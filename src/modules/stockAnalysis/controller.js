@@ -30,8 +30,14 @@ function get(req, res) {
  */
 async function getOrFetchExt(req, res) {
   const { id: stockId, src } = req.params;
+  const { rhgtoken } = req.headers;
   const stockanalysis = req.stockanalysis;
-  const data = await svc.getOrFetchExt({ stockanalysis, stockId, src });
+  const data = await svc.getOrFetchExt({
+    stockanalysis,
+    stockId,
+    src,
+    rhgtoken,
+  });
   return res.json(data);
 }
 
