@@ -20,10 +20,15 @@ async function getOrFetchExt({ stockanalysis, stockId, src, rhgtoken }) {
     // FETCH-EXT: (src: yf/rh/rhg)
     const extData = await fetchExt.get({ src, stockId, rhgtoken });
     if (extData) {
-      doc.set(path, extData);
-      await doc.save();
+      // get: latestStock (fetchExt takes time, -docs might have updated in DB)
+      // we need latest stock details from db
+      const latestStockanalysis = await dao.getByStockId(stockId);
+      const latestDoc = latestStockanalysis || new StockAnalysis({ stockId });
+      latestDoc.set(path, extData);
+      await latestDoc.save();
+      return latestDoc;
     }
-    return doc;
+    return null;
   }
 }
 
