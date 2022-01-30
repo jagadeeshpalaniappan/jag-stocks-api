@@ -39,7 +39,7 @@ function get(req, res) {
 async function getAll(req, res, next) {
   try {
     // POPULATE:
-    const { limit = 500, skip = 0 } = req.query;
+    const { limit = 1000, skip = 0 } = req.query;
     const populates = ["analysis"];
     // TX:
     const data = await svc.getAll({ limit, skip, populates });
@@ -80,14 +80,8 @@ async function create(req, res, next) {
 async function update(req, res, next) {
   try {
     // POPULATE:
-    const {
-      stockId,
-      quantity,
-      avgPrice,
-      buyStats,
-      isResearch,
-      userId,
-    } = req.body;
+    const { stockId, quantity, avgPrice, buyStats, isResearch, userId } =
+      req.body;
     const stock = req.stock;
     if (stockId) stock.stockId = stockId;
     if (quantity) stock.quantity = quantity;
