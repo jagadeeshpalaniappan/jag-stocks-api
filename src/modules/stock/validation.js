@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 // POST /api/stocks
 const createStock = Joi.object({
-  stockId: Joi.string().max(5).required(),
+  stockId: Joi.string().max(10).required(),
   quantity: Joi.number(),
   avgPrice: Joi.number(),
   buyStats: Joi.object(),
